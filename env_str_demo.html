@@ -1,0 +1,220 @@
+<html>
+    <head></head>
+    <body>
+        <!-- <div>Press 'space' to pick up ingredients and drop them off at the base. You can only pick up 5 at a time. <br>  -->
+            <!-- Press 'x' to pick up stations/the base. You can only do so when capacity is at 0. Try to get a score of 10 with as little steps as possible!</div> -->
+        <div id="game" style="border: 5px solid black;"></div>
+        <script type="text/javascript" src="https://rawgithub.com/craftyjs/Crafty/release/dist/crafty-min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.2/math.min.js"></script>
+        <script src="jquery.min.js"></script>
+        <link rel="stylesheet" href="main.css"></link>
+        <script>
+            function zip(a, b) {
+                return a.map((k, i) => [k, b[i]]);
+            } 
+            function centennify(x) {
+                return Math.floor(x / 100) * 100
+            }
+            function random_color() {
+                return Math.floor(Math.random()*16777215).toString(16)
+            }
+            function randomInteger(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+            // function elementwise_scale(arr, scalar) {
+            //     temparr = JSON.parse(JSON.stringify(arr))
+            //     for (var i = 0; i < arr.length; i++) {
+            //         for (var j = 0; j < arr[i].length; j++) {
+            //             temparr[i][j] *= scalar
+            //         }
+            //     }
+            //     return temparr
+            // }
+            function elementwise_apply(arr, func) {
+                temparr = JSON.parse(JSON.stringify(arr))
+                for (var i = 0; i < arr.length; i++) {
+                    for (var j = 0; j < arr[i].length; j++) {
+                        temparr[i][j] = func(arr[i][j])
+                    }
+                }
+                return temparr
+            }
+
+
+            // define core variables
+            var score = 0
+            var capacity = 0
+            var ingredients = {
+                station1: 0,
+                station2: 0,
+                station3: 0,
+                station4: 0,
+                station5: 0
+            }
+            var steps = 0
+            var station_move = false
+            var base_move = false
+            var station_move_cost = 5
+            var base_move_cost = 10
+            var selected_station_num = -1
+
+            // we are currently operating in a grid_length x grid_length gridworld. Keep grid_length an odd number for now.
+            var grid_length = 15
+            var center = parseInt((grid_length - 1)/2)
+            // 0.90 scaling to fit on screen easier
+            var unit_size = 0.90 * (($(window).width() < $(window).height()) ? $(window).width() : $(window).height()) / grid_length   
+
+            // find a random configuration with enough spread
+            do {
+                var rand_units = zip(Array.from({length : 5}, () => randomInteger(0,14) ), 
+                                     Array.from({length : 5}, () => randomInteger(0,14) ) )
+                var rand_locs = elementwise_apply(rand_units, function(x){return math.multiply(x, unit_size)})
+                var spread = 0  
+                for (var i = 0; i < rand_locs.length; i++) {
+                    for (var j = i + 1; j < rand_locs.length; j++) {
+                        spread += 1 / Math.sqrt((rand_locs[i][0] - rand_locs[j][0])**2 + (rand_locs[i][1] - rand_locs[j][1])**2)
+                    }
+                }
+                console.log(spread)
+            } while (spread > 0.025)
+            
+            // initialize board
+            Crafty.init(unit_size * grid_length,
+                        unit_size * grid_length, 
+                        document.getElementById('game'));
+            Crafty.background('#defade')
+
+            // create player
+            var mySquare = Crafty.e('2D, Canvas, Color, Collision, player')
+                .attr({x:unit_size*center, y:unit_size*center, w:unit_size, h:unit_size})
+                .color('#fa8072')
+                // movement controls
+                .bind("KeyDown", function(e) {
+                    if (e.key == Crafty.keys.LEFT_ARROW) {
+                        this.x -= unit_size
+                        if (station_move == true) {
+                            stations[selected_station_num].x -= unit_size
+                            steps += station_move_cost
+                        } else if (base_move == true) {
+                            steps += base_move_cost
+                            base.x -= unit_size
+                        }
+                        else {
+                            steps++
+                        }
+                    } else if (e.key == Crafty.keys.RIGHT_ARROW) {
+                        this.x += unit_size
+                        if (station_move == true) {
+                            stations[selected_station_num].x += unit_size
+                            steps += station_move_cost
+                        } else if (base_move == true) {
+                            steps += base_move_cost
+                            base.x += unit_size
+                        }
+                        else {
+                            steps++
+                        }
+                    } else if (e.key == Crafty.keys.UP_ARROW) {
+                        this.y -= unit_size
+                        if (station_move == true) {
+                            stations[selected_station_num].y -= unit_size
+                            steps += station_move_cost
+                        } else if (base_move == true) {
+                            steps += base_move_cost
+                            base.y -= unit_size
+                        }
+                        else {
+                            steps++
+                        }
+                    } else if (e.key == Crafty.keys.DOWN_ARROW) {
+                        this.y += unit_size
+                        if (station_move == true) {
+                            stations[selected_station_num].y += unit_size
+                            steps += station_move_cost
+                        } else if (base_move == true) {
+                            base.y += unit_size
+                            steps += base_move_cost
+                        }
+                        else {
+                            steps++
+                        }                    
+                    }
+                })
+                // preventing leaving the board 
+                .bind("EnterFrame", function(e) {
+                    if (mySquare.x < 0) {
+                        this.x = 0
+                    } else if (mySquare.x > unit_size * (grid_length - 1)) {
+                        this.x = unit_size * (grid_length - 1)
+                    } else if (mySquare.y < 0) {
+                        this.y = 0
+                    } else if (mySquare.y > unit_size * (grid_length - 1)) {
+                        this.y = unit_size * (grid_length - 1)
+                    }
+                });
+
+
+            // create base
+            var base = Crafty.e('2D, Canvas, Color, base, Collision')
+                .attr({x:unit_size*center, y:unit_size*center, w:unit_size, h:unit_size})
+                .color('#9867C5')
+
+            // create stations
+            var stations = [];
+            for (i = 0; i < rand_locs.length; i++) {
+                stations.push(Crafty.e('2D, DOM, Color, station, Collision, Text')
+                                 .attr({x:rand_locs[i][0], y:rand_locs[i][1], w:unit_size, h:2*unit_size/3, station_num:i})
+                                 .color('grey')
+                                 .bind("KeyDown", function(e) { 
+                                     if (e.key == Crafty.keys.C) { this.color(random_color()) } } )
+                                 .text(i+1).textFont({size: '20px'}).css({"text-align" : "center", "padding-top": unit_size/3+"px"})
+                                 .unselectable()
+                                 )
+                                 
+            }
+
+            // define player collection and station/base moving actions
+            mySquare.bind("KeyDown", function(e) {
+                    if (e.key == Crafty.keys.SPACE && mySquare.hit('station') != null && capacity < 5 && station_move == false && base_move == false) {
+                        ingredients["station" + (mySquare.hit('station')[0].obj.station_num + 1)] += 1
+                        capacity += 1
+                    } else if (e.key == Crafty.keys.SPACE && mySquare.hit('base') != null && station_move == false && base_move == false) {
+                        capacity = 0
+                    } else if (e.key == Crafty.keys.X && mySquare.hit('station') != null && base_move == false && capacity == 0) {
+                        station_move = !station_move
+                        selected_station_num = mySquare.hit('station')[0].obj.station_num
+                    } else if (e.key == Crafty.keys.X && mySquare.hit('base') != null && station_move == false && capacity == 0) {
+                        base_move = !base_move
+                    }
+                    score = math.min(Object.keys(ingredients).map(function(key){ return ingredients[key] }))
+                })
+
+
+            // display information to participant            
+            var helloWorldText = Crafty.e('2D, DOM, Text')
+                .attr({x:10, y:10, w:200})
+                .textFont({size: '20px', weight: 'bold'})
+                .text(function () { return "Score: " + score + "<br>" +
+                                           "Steps : " + steps + "<br>" +
+                                           "Capacity: " + capacity + "<br>" +
+                                           "Ingredient 1 : " + ingredients['station1'] + "<br>" +
+                                           "Ingredient 2 : " + ingredients['station2'] + "<br>" +
+                                           "Ingredient 3 : " + ingredients['station3'] + "<br>" +
+                                           "Ingredient 4 : " + ingredients['station4'] + "<br>" +
+                                           "Ingredient 5 : " + ingredients['station5'] + "<br>" +
+                                           "station_move: " + station_move + "<br>" +
+                                           "base_move: " + base_move + "<br>"} )
+                .dynamicTextGeneration(true)
+                .unselectable()
+
+
+            
+                
+
+        </script>
+        <script>
+            // helpful functions
+            
+        </script>
+    </body>
+</html>
