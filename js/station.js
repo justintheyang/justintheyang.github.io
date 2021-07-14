@@ -21,7 +21,7 @@ Crafty.c('StationText', {
     init: function() {
         this.requires('2D, DOM, Text')
         .attr({z: 5})
-        .textFont({size: '20px'}).textAlign('center')
+        .textFont({size: '2.1344vh'}).textAlign('center')
         .css({'padding-top': '1.5vh', 'color':'#f7f7f7'})
         // add font styling here!
     },

@@ -90,7 +90,7 @@ Crafty.c('Menu', {
             for (var i = 0; i < gs.num_unique_items; i++) {
                 gv.menuItems[i].tween({alpha: 0.0}, 500)
             }
-            setTimeout(function() {eval("Crafty('MenuItem').destroy();");}, 500);            
+            setTimeout(function() {eval("Crafty('MenuItem').destroy();");}, 500);
         })
         .bind('UpdateFrame', function() {
             // control border color and clickability
@@ -125,7 +125,7 @@ Crafty.c('MenuButton', {
             .textFont({size: '20px'})
             .textAlign('center')
             .text('menu')
-            .css({'cursor': 'pointer', 
+            .css({'cursor': 'pointer',
                   'border': '0.5vh solid rgba(191, 191, 191, 1)', 
                   'border-radius': '2vh',
                 //   'padding-top': 3 * gs.unit_size / 8 + 'px',
@@ -146,6 +146,8 @@ Crafty.c('MenuButton', {
             })
             .bind('hideButton', function() {
                 this.tween({alpha: 0.0}, 500)
+                // Crafty('Menu').trigger('hideMenu')
+                // this.css({'border': '0.5vh solid rgba(191, 191, 191, 1)'})
             })
     }
 })

@@ -24,7 +24,7 @@ Crafty.scene('Instructions', function() {
     // Background
     Crafty.background('#e6ecf2'); //#eef7e1
     Crafty.e('Menu')
-    Crafty.e('MenuButton')
+    // Crafty.e('MenuButton')
     gv.isInstr = true
     //#region Sidebars
     // create left and right sidebars
@@ -257,6 +257,32 @@ Crafty.scene('Game', function() {
 })
 
 Crafty.scene('EndGame', function() {
-    alert('you win! you took ' + gv.steps_taken + ' steps')
+    // create instruction text area and buttons
+    this.end_text = Crafty.e('2D, DOM, Color, Text')
+    .attr({x: gs.unit_size * 5.5356, 
+           y: gs.unit_size * (gs.num_rows - 8.75), 
+           w: gs.unit_size * (gs.num_columns - 1.071), 
+           z: 3})
+    .unselectable()
+    .css({'font-size': '2.381vh', 
+           'font-family': 'Courier', 
+           'color': 'black', 
+           'text-align': 'center'})
+    .text('Congratulations! You took ' + gv.steps_taken + ' steps')
+    this.end_button = Crafty.e('2D, DOM, Color, Mouse, Text')
+        .attr({x: (gs.unit_size * (gs.num_columns + 9)) / 2, 
+               y: gs.unit_size * (gs.num_rows - 7.5),
+               w: gs.unit_size,
+               h: 7 * gs.unit_size / 16, z: 4})
+        .text('End').textFont({size: '1.984vh', weight: 'bold'})
+        .setName('instr_button_right')
+        .css({'cursor': 'pointer', 
+              'border': '0.1984vh solid grey',
+              'border-radius': '0.794vh', 
+              'text-align': 'center', 
+              'padding-top': gs.unit_size * 0.006200626 + 'vh'})
+        .bind('Click', function(){ 
+            window.open("https://google.com","_self")
+        })
 })
 

@@ -18,7 +18,7 @@ gs = {
     num_stations: 5,
     
     num_unique_items: 3, // defines how many different items there are
-    items_to_win: [5, 3, 4], // array of length num_unique_items detailing how many items of each type should be made
+    items_to_win: [2, 2, 3], // array of length num_unique_items detailing how many items of each type should be made
     recipes: {
         item0: [5, 5, 5, 5, 5], // maybe we can have hard-coded, named recipes?
         item1: [1, 4, 6, 0, 2],

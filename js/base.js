@@ -15,7 +15,7 @@ Crafty.c('Base', {
                 if (gv.display_items == false) {
                     gv.display_items = true;
                     // Crafty('Menu').trigger('showMenu')
-                    Crafty('MenuButton').trigger('showButton')
+                    Crafty.e('MenuButton').trigger('showButton')
                 }
             })
             .bind('HitOff', function() {
@@ -23,8 +23,12 @@ Crafty.c('Base', {
                     gv.display_items = false;
                     // Crafty('Menu').trigger('hideMenu')
                     Crafty('MenuButton').trigger('hideButton')
-                    Crafty('Menu').tween({alpha: 0.0}, 500);
-                    Crafty('MenuItem').destroy();
+                    if (Crafty('MenuButton').clicked == true) {
+                        Crafty('Menu').trigger('hideMenu')
+                    }
+                    setTimeout(function() {eval("Crafty('MenuButton').destroy();");}, 500);
+                    // Crafty('Menu').tween({alpha: 0.0}, 500);
+                    // Crafty('MenuItem').destroy();
                 }
             })
     }
