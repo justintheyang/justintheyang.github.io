@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <script type="text/javascript" src="https://rawgithub.com/craftyjs/Crafty/release/dist/crafty-min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.2/math.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+        <script type="text/javascript" src="js/game_settings.js"></script>
+        <script type="text/javascript" src="js/player.js"></script>
+        <script type="text/javascript" src="js/base.js"></script>
+        <script type="text/javascript" src="js/station.js"></script>
+        <script type="text/javascript" src="js/item-menu.js"></script>
+
+        <script type="text/javascript" src="js/scenes.js"></script>
+        <link rel="stylesheet" href="main.css"></link>
+
+        <title>Environment Task</title>
+    </head>
+    <body>
+        <div id="game"></div>
+    </body>
+    <script>
+        Crafty.init(gs.unit_size * (5 + gs.num_columns + 5 + 0.5),
+                    $(window).height() * 0.97,
+                    // gs.unit_size * (gs.num_rows + 0.5356), 
+                    document.getElementById('game'));
+
+        Crafty.scene('Instructions')
+
+
+        // // initialize board (to be changed into a scene later on)
+        // Crafty.init(gs.unit_size * gs.num_columns,
+        //             gs.unit_size * gs.num_rows, 
+        //             document.getElementById('game'));
+        // Crafty.background('#defade')
+
+        // // create player
+        // var player = Crafty.e('Player')
+        // // create base
+        // var base = Crafty.e('Base').setName('base')
+        // // create stations
+        // var stations = []
+        // var station_texts = []
+        // for (var i = 0; i < gs.num_stations; i++) {
+            // stations.push(
+            //     Crafty.e('Station')
+            //         .at(gs.stations[i].x, gs.stations[i].y, i)
+            //         .setName('station' + i)
+            //         .attach(Crafty.e('StationText')
+            //                     .at(gs.stations[i].x, gs.stations[i].y)
+            //                     .text(i))
+            // )
+        // }
+        // // display information to participant
+        // var helloWorldText = Crafty.e('2D, DOM, Text')
+        //     .attr({x:10, y:10, w:200})
+        //     .textFont({size: '20px', weight: 'bold'})
+        //     .text(function () { return "Score: " + gs.items_made + "<br>" +
+        //                                "Steps : " + gs.steps_taken + "<br>" +
+        //                                "Capacity: " + gs.current_capacity + "<br>" +
+        //                                "station_move: " + gs.move_station + "<br>" +
+        //                                "base_move: " + gs.move_base + "<br>"} )
+        //     .dynamicTextGeneration(true)
+        //     .unselectable()
+
+
+    </script>
+
+
+
+</html>
