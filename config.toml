@@ -1,12 +1,16 @@
 baseURL = 'https://justintheyang.github.io/'
 languageCode = 'en-us'
 title = 'Justin Yang'
-theme = 'barks'
+theme = ["hugo-embed-pdf-shortcode", "barks"]
+enableInlineShortcodes = true
 
 [params.head]
     author = "Justin Yang"
-    description = "Hi, I'm Justin, and this is my website!"
-    keywords = ["some", "keywords", "to", "describe", "this"]
+#    description = "Hi, I'm Justin! I'm a data scientist at Signifyd, where I build machine learning models to detect fraud."
+    keywords = [
+      "cognitive science", "psychology", "computation", "causality", "representation", 
+      "personal website", "uc san diego", "stanford", "data scientist"]
+    favicon = "favicon_loss.png"
 
 [params.social]
     [params.social.email]
@@ -25,22 +29,34 @@ theme = 'barks'
         url = "https://scholar.google.com/citations?user=otxsJugAAAAJ"
         weight = 3
 
-[menu]
-  [[menu.main]]
-    identifier = "about"
-    name = "About"
-    url = "/about/"
-    weight = 1
+[params.colors]
+    theme_color = "#333333"
+    background_color = "#fcfbf9"
+    text_color = "#333333"
+    link_color = "#60c17d"
 
-  [[menu.main]]
-    identifier = "projects"
-    name = "Projects"
-    url = "/projects/"
-    weight = 2
+[menu]
+  # [[menu.main]]
+  #   identifier = "about"
+  #   name = "About"
+  #   url = "/about/"
+  #   weight = 1
+
+  # [[menu.main]]
+  #   identifier = "projects"
+  #   name = "Projects"
+  #   url = "/projects/"
+  #   weight = 2
 
   [[menu.main]]
     identifier = "demos"
     name = "Demos"
     url = "/demos/"
     weight = 3
+
+  [[menu.main]]
+    identifier = "resume"
+    name = "Resume"
+    url = "/Resume/"
+    weight = 4
 
